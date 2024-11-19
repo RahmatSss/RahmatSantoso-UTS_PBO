@@ -1,3 +1,13 @@
+import java.awt.event.KeyEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
@@ -8,12 +18,31 @@
  * @author Rahmat
  */
 public class barang extends javax.swing.JPanel {
-
-    /**
-     * Creates new form barang
-     */
+    private Connection conn;
+    private DefaultTableModel tabmode;
+    
     public barang() {
         initComponents();
+         try {
+            conn = koneksiDB(); // Inisialisasi koneksi database
+            datatable();        // Muat data ke tabel saat form dibuka
+            kosong();
+            aktif();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Koneksi database gagal: " + e.getMessage());
+        }
+    }
+    private Connection koneksiDB() throws SQLException {
+        Connection conn = null;
+        try {
+            String DB = "jdbc:mysql://localhost:3306/projek_pbo";
+            String user = "root";
+            String pass = "";
+            conn = DriverManager.getConnection(DB, user, pass);
+        } catch (SQLException e) {
+            throw new SQLException("Koneksi gagal: " + e.getMessage());
+        }
+        return conn;
     }
 
     /**
@@ -159,8 +188,18 @@ public class barang extends javax.swing.JPanel {
         );
 
         jButton1.setText("Simpan");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Edit");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Hapus");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -170,8 +209,18 @@ public class barang extends javax.swing.JPanel {
         });
 
         jButton4.setText("Batal");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Keluar");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -261,19 +310,54 @@ public class barang extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        int bar = jTable1.getSelectedRow();
+        String a = tabmode.getValueAt(bar, 0).toString();
+        String b = tabmode.getValueAt(bar, 1).toString();
+        String c = tabmode.getValueAt(bar, 2).toString();
+        String d = tabmode.getValueAt(bar, 3).toString();
+        String e = tabmode.getValueAt(bar, 4).toString();
+        String f = tabmode.getValueAt(bar, 5).toString();
         
+        jTextField1.setText(a);
+        jTextField2.setText(b);
+        jComboBox1.setSelectedItem(c);
+        jTextField3.setText(d);
+        jTextField4.setText(e);
+        jTextField5.setText(f);
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
-
+        
     }//GEN-LAST:event_jTextField6ActionPerformed
 
     private void jTextField6KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField6KeyPressed
-        
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            datatable();
+        }
     }//GEN-LAST:event_jTextField6KeyPressed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        
+        Object[] Baris = {"Kode Barang", "Nama Barang", "Kategori Barang", "Merek", "Ukuran", "Lokasi"};
+        tabmode = new DefaultTableModel(null, Baris);
+        String cariitem = jTextField6.getText();            
+        try{
+            String sql = "SELECT * FROM barang WHERE kd_barang like '%"+cariitem+"%' or nama_barang like '%"+cariitem+"%' order by kd_barang asc";
+            Statement stat = conn.createStatement();
+            ResultSet hasil = stat.executeQuery(sql);
+            while(hasil.next()){
+                tabmode.addRow(new Object[]{
+                    hasil.getString(1),
+                    hasil.getString(2),
+                    hasil.getString(3),
+                    hasil.getString(4),
+                    hasil.getString(5),
+                    hasil.getString(6)
+                });
+            }
+            jTable1.setModel(tabmode);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Data gagal di panggil"+e);
+        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
@@ -281,8 +365,80 @@ public class barang extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextField4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        int ok = JOptionPane.showConfirmDialog(null, "Apakah anda yakin menghapus data ini?", "konfirm dialog", JOptionPane.YES_NO_OPTION);
+        if(ok==0){
+            String sql = "DELETE FROM barang WHERE kd_barang='"+jTextField1.getText()+"'";
+            try {
+                PreparedStatement stat = conn.prepareStatement(sql);
+                stat.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Data berhasil di hapus");
+                kosong();
+                jTextField1.requestFocus();
+            } catch(SQLException e){
+                JOptionPane.showMessageDialog(null, "Data gagal di hapus"+e);
+            }
+            datatable();
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String sql = "INSERT INTO barang VALUES (?,?,?,?,?,?)";
+        try {
+            PreparedStatement stat = conn.prepareStatement(sql);
+            stat.setString(1, jTextField1.getText());
+            stat.setString(2, jTextField2.getText());
+            stat.setString(3, jComboBox1.getSelectedItem().toString());
+            stat.setString(4, jTextField3.getText());
+            stat.setString(5, jTextField4.getText());
+            stat.setString(6, jTextField5.getText());
+            stat.executeUpdate();
+            JOptionPane.showMessageDialog(null,"Data berhasil di simpan");
+            kosong();
+            jTextField1.requestFocus();
+        } catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Data gagal di simapan"+e);
+        }
+        datatable();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        String sql = "UPDATE barang SET nama_barang=?, kategori_barang=?, merek=?, ukuran=?, nama_lokasi=? WHERE kd_barang=?";
+        try {
+            PreparedStatement stat = conn.prepareStatement(sql);
+            stat.setString(1, jTextField2.getText());
+            stat.setString(2, jComboBox1.getSelectedItem().toString());
+            stat.setString(3, jTextField3.getText());
+            stat.setString(4, jTextField4.getText());
+            stat.setString(5, jTextField5.getText());
+            stat.setString(6, jTextField1.getText());
+            stat.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Data berhasil diubah");
+            kosong();
+            jComboBox1.requestFocus();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Data gagal diubah: " + e);
+        }
+        datatable();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        kosong();
+        datatable();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+         // Dapatkan container induk
+    java.awt.Container parent = this.getParent();
+    
+    if (parent != null) {
+        // Hapus panel ini dari induknya
+        parent.remove(this);
+        
+        // Validasi ulang dan repaint untuk memperbarui UI
+        parent.revalidate();
+        parent.repaint();
+    }
+    }//GEN-LAST:event_jButton5ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -312,4 +468,43 @@ public class barang extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
     // End of variables declaration//GEN-END:variables
+
+    private void datatable() {
+        Object[] Baris = {"Kode Barang", "Nama Barang", "Kategori", "Merek", "Ukuran", "Lokasi"};
+        tabmode = new DefaultTableModel(null, Baris);
+        String cariitem = jTextField1.getText();            
+        try{
+            String sql = "SELECT * FROM barang WHERE kd_barang like '%"+cariitem+"%' or nama_barang like '%"+cariitem+"%' order by kd_barang asc";
+            Statement stat = conn.createStatement();
+            ResultSet hasil = stat.executeQuery(sql);
+            while(hasil.next()){
+                tabmode.addRow(new Object[]{
+                    hasil.getString(1),
+                    hasil.getString(2),
+                    hasil.getString(3),
+                    hasil.getString(4),
+                    hasil.getString(5),
+                    hasil.getString(6)
+                });
+            }
+            jTable1.setModel(tabmode);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Data gagal di panggil"+e);
+        }    }
+
+    private void kosong() {
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextField4.setText("");
+        jTextField5.setText("");
+        jTextField6.setText("");
+        jComboBox1.setSelectedItem(null);
+    }
+
+    private void aktif() {
+        jTextField1.requestFocus();
+        jComboBox1.setSelectedItem(null);
+    }
+
 }
