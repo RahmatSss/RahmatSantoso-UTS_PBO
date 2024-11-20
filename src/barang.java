@@ -378,25 +378,31 @@ jComboBox1.addActionListener(new java.awt.event.ActionListener() {
     }//GEN-LAST:event_jTextField6KeyPressed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // array untuk header tabel
         Object[] Baris = {"Kode Barang", "Nama Barang", "Kategori Barang", "Merek", "Jumlah", "Lokasi"};
+        // membuat model tabel baru
         table = new DefaultTableModel(null, Baris);
+        // mendapatkan teks pencarian dari jTextField6
         String cariitem = jTextField6.getText();            
         try{
+            // Query SQL untuk mencari data barang berdasarkan kode atau nama
             String sql = "SELECT * FROM barang WHERE kd_barang like '%"+cariitem+"%' or nama_barang like '%"+cariitem+"%' order by kd_barang asc";
             Statement stat = conn.createStatement();
             ResultSet hasil = stat.executeQuery(sql);
             while(hasil.next()){
                 table.addRow(new Object[]{
-                    hasil.getString(1),
-                    hasil.getString(2),
-                    hasil.getString(3),
-                    hasil.getString(4),
-                    hasil.getString(5),
-                    hasil.getString(6)
+                    hasil.getString(1), // kode Barang
+                    hasil.getString(2), // nama Barang
+                    hasil.getString(3), // kategori Barang
+                    hasil.getString(4), // merek
+                    hasil.getString(5), //jumlah
+                    hasil.getString(6) // lokasi
                 });
             }
+            // Menampilkan data pada jTable1
             jTable1.setModel(table);
         } catch (Exception e) {
+            // Menampilkan pesan kesalahan jika query gagal
             JOptionPane.showMessageDialog(null, "Data gagal di panggil"+e);
         }
     }//GEN-LAST:event_jButton6ActionPerformed
@@ -406,63 +412,66 @@ jComboBox1.addActionListener(new java.awt.event.ActionListener() {
     }//GEN-LAST:event_jTextField4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+       // Menampilkan dialog konfirmasi sebelum menghapus data
         int ok = JOptionPane.showConfirmDialog(null, "Apakah anda yakin menghapus data ini?", "konfirm dialog", JOptionPane.YES_NO_OPTION);
         if(ok==0){
+             // Query SQL untuk menghapus data berdasarkan kode barang
             String sql = "DELETE FROM barang WHERE kd_barang='"+jTextField1.getText()+"'";
             try {
                 PreparedStatement stat = conn.prepareStatement(sql);
                 stat.executeUpdate();
-                JOptionPane.showMessageDialog(null, "Data berhasil di hapus");
+                JOptionPane.showMessageDialog(null, "Data berhasil di hapus"); // Menampilkan pesan berhasil
                 kosong();
                 jTextField1.requestFocus();
             } catch(SQLException e){
-                JOptionPane.showMessageDialog(null, "Data gagal di hapus"+e);
+                JOptionPane.showMessageDialog(null, "Data gagal di hapus"+e); // Menampilkan pesan kesalahan jika penghapusan gagal
             }
-            datatable();
+            datatable();  // Memuat ulang data tabel
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String sql = "INSERT INTO barang VALUES (?,?,?,?,?,?)";
         try {
-            PreparedStatement stat = conn.prepareStatement(sql);
-            stat.setString(1, jTextField1.getText());
-            stat.setString(2, jTextField2.getText());
-            stat.setString(3, jComboBox1.getSelectedItem().toString());
-            stat.setString(4, jTextField3.getText());
-            stat.setString(5, jTextField4.getText());
-            stat.setString(6, jTextField5.getText());
+            PreparedStatement stat = conn.prepareStatement(sql);  // Mengatur parameter pada query
+            stat.setString(1, jTextField1.getText()); // kode barang
+            stat.setString(2, jTextField2.getText()); // nama barang
+            stat.setString(3, jComboBox1.getSelectedItem().toString()); //kategori barang
+            stat.setString(4, jTextField3.getText()); //merek
+            stat.setString(5, jTextField4.getText()); //jumlah
+            stat.setString(6, jTextField5.getText()); // lokasi
             stat.executeUpdate();
-            JOptionPane.showMessageDialog(null,"Data berhasil di simpan");
+            JOptionPane.showMessageDialog(null,"Data berhasil di simpan"); // Menampilkan pesan berhasil
             kosong();
             jTextField1.requestFocus();
         } catch(SQLException e){
-            JOptionPane.showMessageDialog(null, "Data gagal di simapan"+e);
+            JOptionPane.showMessageDialog(null, "Data gagal di simapan"+e); // Menampilkan pesan kesalahan jika penyimpanan gagal
         }
-        datatable();
+        datatable();  // Memuat ulang data tabel
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        String sql = "UPDATE barang SET nama_barang=?, kategori_barang=?, merek=?, jumlah=?, nama_lokasi=? WHERE kd_barang=?";
+        String sql = "UPDATE barang SET nama_barang=?, kategori_barang=?, merek=?, jumlah=?, nama_lokasi=? WHERE kd_barang=?"; // Query SQL untuk memperbarui data barang
         try {
-            PreparedStatement stat = conn.prepareStatement(sql);
-            stat.setString(1, jTextField2.getText());
-            stat.setString(2, jComboBox1.getSelectedItem().toString());
-            stat.setString(3, jTextField3.getText());
-            stat.setString(4, jTextField4.getText());
-            stat.setString(5, jTextField5.getText());
-            stat.setString(6, jTextField1.getText());
+            PreparedStatement stat = conn.prepareStatement(sql); // Mengatur parameter pada query
+            stat.setString(1, jTextField2.getText()); // nama barang
+            stat.setString(2, jComboBox1.getSelectedItem().toString()); // kategori barang
+            stat.setString(3, jTextField3.getText()); // merek
+            stat.setString(4, jTextField4.getText()); // jumlah
+            stat.setString(5, jTextField5.getText()); // lokasi
+            stat.setString(6, jTextField1.getText()); // kode barang
             stat.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Data berhasil diubah");
-            kosong();
+            JOptionPane.showMessageDialog(null, "Data berhasil diubah"); // Menampilkan pesan berhasil
+            kosong(); // Mengosongkan inputan dan mengatur fokus
             jComboBox1.requestFocus();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Data gagal diubah: " + e);
+            JOptionPane.showMessageDialog(null, "Data gagal diubah: " + e);  // Menampilkan pesan kesalahan jika pembaruan gagal
         }
-        datatable();
+        datatable(); // Memuat ulang data tabel
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // Mengosongkan inputan dan memuat ulang data tabel
         kosong();
         datatable();
     }//GEN-LAST:event_jButton4ActionPerformed
