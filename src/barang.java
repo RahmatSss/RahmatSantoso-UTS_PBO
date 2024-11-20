@@ -1,10 +1,16 @@
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
@@ -18,20 +24,22 @@ import javax.swing.table.DefaultTableModel;
  * @author Rahmat
  */
 public class barang extends javax.swing.JPanel {
-    private Connection conn;
-    private DefaultTableModel tabmode;
+    private Connection conn;                // koneksi ke database
+    private DefaultTableModel tabmode;      // model table untuk Jtbale
     
+    //konstruktor class
     public barang() {
         initComponents();
          try {
-            conn = koneksiDB(); // Inisialisasi koneksi database
-            datatable();        // Muat data ke tabel saat form dibuka
-            kosong();
-            aktif();
+            conn = koneksiDB(); // inisialisasi koneksi database
+            datatable();        // muat data ke tabel saat form dibuka
+            kosong();           //reset semua input
+            aktif();            //fokus pada elemen tertentu
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Koneksi database gagal: " + e.getMessage());
         }
     }
+    // metode untuk membuat koneksi ke database
     private Connection koneksiDB() throws SQLException {
         Connection conn = null;
         try {
@@ -79,6 +87,8 @@ public class barang extends javax.swing.JPanel {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -222,6 +232,20 @@ public class barang extends javax.swing.JPanel {
             }
         });
 
+        jButton7.setText("Import Data");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
+        jButton8.setText("Ekspor data");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -233,7 +257,7 @@ public class barang extends javax.swing.JPanel {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -267,7 +291,11 @@ public class barang extends javax.swing.JPanel {
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton4)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton5))))
+                                .addComponent(jButton5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton7)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton8))))
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(127, 127, 127))
         );
@@ -302,13 +330,16 @@ public class barang extends javax.swing.JPanel {
                     .addComponent(jButton2)
                     .addComponent(jButton3)
                     .addComponent(jButton4)
-                    .addComponent(jButton5))
+                    .addComponent(jButton5)
+                    .addComponent(jButton7)
+                    .addComponent(jButton8))
                 .addGap(50, 50, 50)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(60, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    // aksi keteika baris di tabel diklik
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         int bar = jTable1.getSelectedRow();
         String a = tabmode.getValueAt(bar, 0).toString();
@@ -329,7 +360,7 @@ public class barang extends javax.swing.JPanel {
     private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
         
     }//GEN-LAST:event_jTextField6ActionPerformed
-
+    // pencarian data saat menekan tombol Enter
     private void jTextField6KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField6KeyPressed
         if(evt.getKeyCode() == KeyEvent.VK_ENTER){
             datatable();
@@ -440,6 +471,86 @@ public class barang extends javax.swing.JPanel {
     }
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        JFileChooser fileChooser = new JFileChooser(); // Dialog pemilihan file
+    
+        // Menambahkan filter untuk hanya menampilkan file dengan ekstensi .txt
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Text Files (*.txt)", "txt"));
+
+        int result = fileChooser.showSaveDialog(this); // Membuka dialog untuk menyimpan file
+        if (result == JFileChooser.APPROVE_OPTION) {
+            // Pastikan file yang dipilih memiliki ekstensi .txt
+            String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+            if (!filePath.endsWith(".txt")) {
+                filePath += ".txt";
+            }
+
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(filePath))) {
+                int row = jTable1.getRowCount();
+                int col = jTable1.getColumnCount();
+
+                // Menulis data dari JTable ke file
+                for (int i = 0; i < row; i++) {
+                    for (int j = 0; j < col; j++) {
+                        bw.write(jTable1.getValueAt(i, j).toString());
+                        if (j < col - 1) bw.write("\t"); // Gunakan tab sebagai pemisah antar kolom
+                    }
+                    bw.newLine(); // Pindah ke baris berikutnya
+                }
+
+                JOptionPane.showMessageDialog(null, "Data berhasil diekspor ke file TXT.");
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "Gagal mengekspor data: " + e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        JFileChooser fileChooser = new JFileChooser(); // Dialog untuk memilih file
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Text Files (*.txt)", "txt"));
+
+        int result = fileChooser.showOpenDialog(this); // Membuka dialog pemilihan file
+        if (result == JFileChooser.APPROVE_OPTION) {
+            try (BufferedReader br = new BufferedReader(new FileReader(fileChooser.getSelectedFile()))) {
+                String line;
+                int lineNumber = 0; // Penanda baris untuk debugging
+                while ((line = br.readLine()) != null) {
+                    lineNumber++;
+
+                    // Pisahkan data berdasarkan karakter tab (\t) atau sesuaikan jika delimiter lain digunakan
+                    String[] data = line.split("\t");
+
+                    // Validasi: Pastikan jumlah kolom sesuai dengan tabel (6 kolom dalam kasus ini)
+                    if (data.length != 6) {
+                        JOptionPane.showMessageDialog(null, 
+                            "Format data tidak valid pada baris " + lineNumber + ". Pastikan ada 6 kolom data.",
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                        continue; // Lewati baris yang tidak valid
+                    }
+
+                    // SQL untuk memasukkan data ke dalam tabel barang
+                    String sql = "INSERT INTO barang VALUES (?,?,?,?,?,?)";
+                    PreparedStatement stat = conn.prepareStatement(sql);
+
+                    // Set nilai parameter berdasarkan data dari file
+                    for (int i = 0; i < data.length; i++) {
+                        stat.setString(i + 1, data[i].trim()); // Trim untuk menghapus spasi
+                    }
+
+                    // Eksekusi query
+                    stat.executeUpdate();
+                }
+
+                JOptionPane.showMessageDialog(null, "Data berhasil diimpor.");
+                datatable(); // Refresh tabel
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, "Gagal membaca file: " + e.getMessage());
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Gagal mengimpor data: " + e.getMessage());
+            }
+        }
+    }//GEN-LAST:event_jButton7ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -448,6 +559,8 @@ public class barang extends javax.swing.JPanel {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -468,7 +581,8 @@ public class barang extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
     // End of variables declaration//GEN-END:variables
-
+    
+    // metode untuk menyegarkan tabel dengan data dari database
     private void datatable() {
         Object[] Baris = {"Kode Barang", "Nama Barang", "Kategori", "Merek", "Ukuran", "Lokasi"};
         tabmode = new DefaultTableModel(null, Baris);
@@ -491,7 +605,7 @@ public class barang extends javax.swing.JPanel {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Data gagal di panggil"+e);
         }    }
-
+    //reset input
     private void kosong() {
         jTextField1.setText("");
         jTextField2.setText("");
@@ -501,7 +615,7 @@ public class barang extends javax.swing.JPanel {
         jTextField6.setText("");
         jComboBox1.setSelectedItem(null);
     }
-
+    //fokus pada elemen input pertama
     private void aktif() {
         jTextField1.requestFocus();
         jComboBox1.setSelectedItem(null);

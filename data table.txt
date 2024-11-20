@@ -1,0 +1,4 @@
+3A	Kalung	Barang Hiasan	Emas Karat	3	Banjarbaru
+4A	Gelang	Barang Hiasan	Emas Karat	1	Banjarbaru
+5B	cincin	Barang Hiasan	Emas Karat	2	Banjarbaru
+6B	Anting	Barang Hiasan	Emas Karat	4	Banjarbaru
