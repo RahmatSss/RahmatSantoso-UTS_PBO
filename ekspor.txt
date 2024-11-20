@@ -1,0 +1,3 @@
+2A 	Monitor	Perangkat Komputer	Acer	3	toko bjb
+3C 	GPU	Perangkat Komputer	Acer	5	toko bjb
+4B 	MOUSE	Perangkat Komputer	Acer	7	toko bjb

@@ -1,0 +1,4 @@
+5A	Speaker	Perangkat Komputer	Acer	2	Toko
+6A	Cpu	Perangkat Komputer	Acer	1	Toko
+7A	Mouse	Perangkat Komputer	Acer	4	Toko
+8A	kybord	Perangkat Komputer	Acer	3	Toko
