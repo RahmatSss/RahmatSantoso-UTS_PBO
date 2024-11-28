@@ -35,6 +35,8 @@ public class barang extends javax.swing.JPanel {
             datatable();        // muat data ke tabel saat form dibuka
             kosong();           //reset semua input
             aktif();            //fokus pada elemen tertentu
+            jButton2.setEnabled(false);
+            jButton3.setEnabled(false);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Koneksi database gagal: " + e.getMessage());
         }
@@ -101,15 +103,20 @@ public class barang extends javax.swing.JPanel {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "null", "null", "null", "null"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
@@ -183,6 +190,8 @@ jComboBox1.addActionListener(new java.awt.event.ActionListener() {
         .addGap(0, 8, Short.MAX_VALUE)
     );
 
+    jButton1.setBackground(new java.awt.Color(51, 255, 51));
+    jButton1.setForeground(new java.awt.Color(255, 255, 255));
     jButton1.setText("Simpan");
     jButton1.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -211,6 +220,8 @@ jComboBox1.addActionListener(new java.awt.event.ActionListener() {
         }
     });
 
+    jButton5.setBackground(new java.awt.Color(255, 0, 51));
+    jButton5.setForeground(new java.awt.Color(255, 255, 255));
     jButton5.setText("Keluar");
     jButton5.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -236,8 +247,8 @@ jComboBox1.addActionListener(new java.awt.event.ActionListener() {
     this.setLayout(layout);
     layout.setHorizontalGroup(
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-            .addContainerGap(120, Short.MAX_VALUE)
+        .addGroup(layout.createSequentialGroup()
+            .addGap(113, 113, 113)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(10, 10, 10)
@@ -252,13 +263,13 @@ jComboBox1.addActionListener(new java.awt.event.ActionListener() {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE))
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(34, 34, 34)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jComboBox1, 0, 184, Short.MAX_VALUE)
-                                    .addComponent(jTextField2)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, 0, 169, Short.MAX_VALUE)
+                                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jTextField1))
-                                .addGap(153, 153, 153)
+                                .addGap(168, 168, 168)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -278,7 +289,7 @@ jComboBox1.addActionListener(new java.awt.event.ActionListener() {
                             .addComponent(jButton7)
                             .addGap(18, 18, 18)
                             .addComponent(jButton8)
-                            .addGap(9, 9, 9))
+                            .addGap(8, 8, 8))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                             .addGap(0, 0, Short.MAX_VALUE)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -290,20 +301,17 @@ jComboBox1.addActionListener(new java.awt.event.ActionListener() {
                             .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
                             .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(206, 206, 206))))
+                            .addGap(205, 205, 205))))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createSequentialGroup()
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(312, 312, 312)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGap(0, 0, Short.MAX_VALUE)))
-            .addGap(127, 127, 127))
+                    .addGap(312, 312, 312)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGap(93, 93, 93))
     );
     layout.setVerticalGroup(
         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(layout.createSequentialGroup()
-            .addGap(45, 45, 45)
+            .addGap(24, 24, 24)
             .addComponent(jLabel1)
             .addGap(26, 26, 26)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -345,7 +353,7 @@ jComboBox1.addActionListener(new java.awt.event.ActionListener() {
                 .addComponent(jButton6))
             .addGap(28, 28, 28)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(57, 57, 57))
+            .addGap(43, 43, 43))
     );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -365,6 +373,9 @@ jComboBox1.addActionListener(new java.awt.event.ActionListener() {
         jTextField3.setText(merekBarang );
         jTextField4.setText(jumlahBarang);
         jTextField5.setText(lokasiBarang);
+        
+        jButton2.setEnabled(true);
+        jButton3.setEnabled(true);
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
@@ -436,6 +447,8 @@ jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             JOptionPane.showMessageDialog(null,"Data berhasil di simpan");
             kosong();
             jTextField1.requestFocus();
+            
+            jButton2.setEnabled(false);
         } catch(SQLException e){
             JOptionPane.showMessageDialog(null, "Data gagal di simapan"+e);
         }
@@ -465,6 +478,8 @@ jComboBox1.addActionListener(new java.awt.event.ActionListener() {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         kosong();
         datatable();
+        jButton2.setEnabled(false);
+        jButton3.setEnabled(false);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -599,7 +614,7 @@ jComboBox1.addActionListener(new java.awt.event.ActionListener() {
     private void datatable() {
         Object[] Baris = {"Kode Barang", "Nama Barang", "Kategori", "Merek", "Jumlah", "Lokasi"};
         table = new DefaultTableModel(null, Baris);
-        String cariitem = jTextField1.getText();            
+        String cariitem = jTextField1.getText();      
         try{
             String sql = "SELECT * FROM barang WHERE kd_barang like '%"+cariitem+"%' or nama_barang like '%"+cariitem+"%' order by kd_barang asc";
             Statement stat = conn.createStatement();
@@ -617,7 +632,8 @@ jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             jTable1.setModel(table);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Data gagal di panggil"+e);
-        }    }
+        }    
+    }
     //reset input
     private void kosong() {
         jTextField1.setText("");
