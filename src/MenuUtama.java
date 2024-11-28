@@ -232,25 +232,27 @@ public class MenuUtama extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
+    // Method ini dipanggil ketika label (jLabel5) diklik oleh pengguna
     private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
-        pn_main.setBackground(new Color(240,240,240));
-        pn_line.setBackground(new Color(0,102,153));
+        pn_main.setBackground(new Color(240,240,240)); // Mengubah warna latar belakang panel utama (pn_main) menjadi abu-abu muda
+        pn_line.setBackground(new Color(0,102,153)); // Mengubah warna latar belakang panel garis (pn_line) menjadi biru tua
         
-        pn_utama.removeAll();
-        pn_utama.add(new barang());
+        pn_utama.removeAll(); // Menghapus semua komponen yang ada di panel utama (pn_utama)
+        pn_utama.add(new barang());   // Menambahkan komponen baru (barang) ke dalam panel utama (pn_utama)
+         // Memperbarui tampilan panel utama agar perubahan terlihat
         pn_utama.repaint();
         pn_utama.revalidate();
     }//GEN-LAST:event_jLabel5MouseClicked
 
+    // Method ini dipanggil ketika kursor masuk ke area label (jLabel5)
     private void jLabel5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseEntered
-        pn_main.setBackground(new Color(153,255,255));
-        pn_line.setBackground(new Color(255,255,255));
+        pn_main.setBackground(new Color(153,255,255)); // Mengubah warna latar belakang panel utama (pn_main) menjadi biru muda terang
+        pn_line.setBackground(new Color(255,255,255));  // Mengubah warna latar belakang panel garis (pn_line) menjadi putih
     }//GEN-LAST:event_jLabel5MouseEntered
-
+    // Method ini dipanggil ketika kursor keluar dari area label (jLabel5)
     private void jLabel5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseExited
-        pn_main.setBackground(new Color(255,255,255));
-        pn_line.setBackground(new Color(255,255,255));
+        pn_main.setBackground(new Color(255,255,255)); // Mengembalikan warna latar belakang panel utama (pn_main) menjadi putih
+        pn_line.setBackground(new Color(255,255,255)); // Mengembalikan warna latar belakang panel garis (pn_line) menjadi putih
     }//GEN-LAST:event_jLabel5MouseExited
 
     /**
