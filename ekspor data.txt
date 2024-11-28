@@ -1,0 +1,4 @@
+2	Monitor	Perangkat Komputer	Acer	10	kantor
+3	kybord	Perangkat Komputer	Acer	10	kantor
+4	Mouse	Perangkat Komputer	Acer	10	kantor
+5	CPU	Perangkat Komputer	Acer	10	kantor
